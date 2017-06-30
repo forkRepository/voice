@@ -119,7 +119,7 @@
 //                    alert(tip);
                 },
                 error: function (res) {
-                    console.log(res.responseText);
+
                     alert('请求异常！\n' + res.responseText);
                     return false;
                 },
@@ -166,6 +166,11 @@
                 per = $(this).attr('per');
             });
 
+            var readAll = function () {
+                console.log('---------------------------');
+                GetAudio(1, readAll);
+            };
+
 
             var GetAudio = function (autoplay, callback) {
                 var loop = $("input[name=is_loop]").prop('checked');
@@ -174,19 +179,21 @@
                     autoplay = false;
                 }
 
-                var CurrText = texAll.substring(CurrIndex, Limit_Len);
-                if (texAll.length > Limit_Len) {
-                    CurrText = texAll.substring(CurrIndex, Limit_Len);
-                    CurrIndex += limit_strlen;
+                var CurrText = '';
+
+                if (texAll.length - Limit_Len > 0) {
+                    CurrText = texAll.substr(CurrIndex, Limit_Len);
+                    CurrIndex += Limit_Len;
                     $("#read_audio").removeAttr('loop');
                 } else {
+                    CurrText = texAll;
+
                     if (!!loop) {
                         $("#read_audio").attr('loop', 'loop');
                     } else {
                         $("#read_audio").removeAttr('loop');
                     }
                 }
-
                 var tex = encodeURI(CurrText);
 
                 var spd = $("#spd").attr('title');
@@ -225,7 +232,7 @@
                             callback();
                             window.clearInterval(is_playFinish);
                         }
-                    }, 1000);
+                    }, 500);
                 }
 
             };
@@ -241,7 +248,7 @@
                 texAll = txt_from;
 
                 CurrIndex = 0;
-                GetAudio(1);
+                GetAudio(1, readAll);
             };
 
             //开启语音
